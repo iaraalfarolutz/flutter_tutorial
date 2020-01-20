@@ -1,4 +1,4 @@
-import 'package:eventish/User.dart';
+import 'package:eventish/models/User.dart';
 import 'package:uuid/uuid.dart';
 
 class Event {

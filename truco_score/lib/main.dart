@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
@@ -139,8 +140,10 @@ class _TrucoState extends State<Truco> {
                       ),
                     ),
                     Expanded(
-                      flex: 6,
+                      flex: 5,
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        verticalDirection: VerticalDirection.down,
                         children: t1_score,
                       ),
                     ),
@@ -263,7 +266,7 @@ class _TrucoState extends State<Truco> {
         score_list.removeAt(level - 1);
     }
 
-    Widget container = new Expanded(
+    Widget container = Expanded(
       child: Container(
         height: 50.0,
         width: 50.0,

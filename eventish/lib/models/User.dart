@@ -1,11 +1,10 @@
-import 'package:eventish/Task.dart';
-import 'package:uuid/uuid.dart';
+import 'Task.dart';
 
 class User {
   final String username;
   final String firstname;
   final String lastname;
-  final Uuid id;
+  final String id;
   final String email;
   final String password;
   final String phone;
@@ -34,5 +33,17 @@ class User {
         phone: json['phone'],
         confirmed: json['confirmed'],
         tasks: json['tasks']);
+  }
+
+  String getUserInfo() {
+    String info = this.username +
+        ", " +
+        this.lastname +
+        ", " +
+        this.firstname +
+        ", " +
+        this.email +
+        ", ";
+    return info;
   }
 }
