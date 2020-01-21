@@ -10,15 +10,15 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
   int _selectedIndex = 0;
   static const List<Widget> _widgetOptions = <Widget>[
     Text(
-      'Index 0: Home',
+      'Index 0: Events',
       style: kBottomNavigationBar,
     ),
     Text(
-      'Index 1: Business',
+      'Index 1: New Event',
       style: kBottomNavigationBar,
     ),
     Text(
-      'Index 2: School',
+      'Index 2: Tasks',
       style: kBottomNavigationBar,
     ),
   ];
@@ -34,16 +34,16 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
     return BottomNavigationBar(
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          title: Text('Home'),
+          icon: Icon(Icons.calendar_today),
+          title: Text('Events'),
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.business),
-          title: Text('Business'),
+          icon: Icon(Icons.add_box),
+          title: Text('New Event'),
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.school),
-          title: Text('School'),
+          icon: Icon(Icons.playlist_add_check),
+          title: Text('Tasks'),
         ),
       ],
       currentIndex: _selectedIndex,

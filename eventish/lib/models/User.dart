@@ -1,14 +1,14 @@
 import 'Task.dart';
 
 class User {
-  final String username;
-  final String firstname;
-  final String lastname;
-  final String id;
-  final String email;
-  final String password;
-  final String phone;
-  final bool confirmed;
+  String username;
+  String firstname;
+  String lastname;
+  String id;
+  String email;
+  String password;
+  String phone;
+  bool confirmed;
   List<Task> tasks;
 
   User(
@@ -36,14 +36,24 @@ class User {
   }
 
   String getUserInfo() {
-    String info = this.username +
-        ", " +
+    String info = "{ \"username\": \"" +
+        this.username.trim() +
+        "\", " +
+        "\"lastName\": \"" +
         this.lastname +
-        ", " +
+        "\", " +
+        "\"firstName\": \"" +
         this.firstname +
-        ", " +
-        this.email +
-        ", ";
+        "\", " +
+        "\"email\": \"" +
+        this.email.trim() +
+        "\", " +
+        "\"phone\": \"" +
+        this.phone.trim() +
+        "\", " +
+        "\"password\": \"" +
+        this.password.trim() +
+        "\"}";
     return info;
   }
 }
