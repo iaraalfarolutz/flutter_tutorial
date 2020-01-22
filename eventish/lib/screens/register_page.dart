@@ -5,8 +5,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
 class RegisterPage extends StatefulWidget {
+  final User user;
   @override
   _RegisterPageState createState() => _RegisterPageState();
+  RegisterPage({this.user});
 }
 
 class _RegisterPageState extends State<RegisterPage> {
@@ -109,7 +111,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   setState(() {
                     postUser(_myUser).then((status) {
                       if (status == 200 || status == 201) {
-                        Navigator.pop(context);
+                        Navigator.pop(context, _myUser.username);
                       } else
                         Fluttertoast.showToast(
                             msg: "There was an error, please try again",

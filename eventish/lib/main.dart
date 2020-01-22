@@ -3,7 +3,6 @@ import 'package:eventish/screens/first_page.dart';
 import 'package:eventish/screens/register_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:eventish/models/User.dart';
@@ -21,14 +20,14 @@ class MyApp extends StatelessWidget {
           primaryColor: kCardColor,
           scaffoldBackgroundColor: kBackColor,
         ),
-        home: Eventish());
+        home: Eventish(username: ""));
   }
 }
 
 class Eventish extends StatefulWidget {
-  String password;
-  String username;
-  Eventish({this.password, this.username});
+  final String username;
+
+  Eventish({this.username});
   @override
   _EventishState createState() => _EventishState();
 }
@@ -36,12 +35,13 @@ class Eventish extends StatefulWidget {
 class _EventishState extends State<Eventish> {
   Future<User> user;
   User _myUser;
+  String password;
+  String username;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: kButtonColor,
         title: Center(
           child: Text(
             'Eventish',
@@ -64,16 +64,17 @@ class _EventishState extends State<Eventish> {
                     fontWeight: FontWeight.bold),
               ),
             ),
-            Material(
+            Container(
               color: kCardColor,
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: TextField(
+                child: TextFormField(
                   onChanged: (text) {
                     setState(() {
-                      widget.username = text.trim();
+                      username = text;
                     });
                   },
+                  initialValue: widget.username,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Username',
@@ -82,13 +83,13 @@ class _EventishState extends State<Eventish> {
                 ),
               ),
             ),
-            Material(
+            Container(
               color: kCardColor,
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: TextField(
+                child: TextFormField(
                   onChanged: (text) {
-                    widget.password = text;
+                    password = text;
                   },
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
@@ -104,14 +105,15 @@ class _EventishState extends State<Eventish> {
                 child: Text('Sign in'),
                 onPressed: () {
                   setState(() {
-                    fetchUser(widget.username).then((result) {
+                    fetchUser(username.trim()).then((result) {
                       _myUser = result;
-                      if (widget.password != null) {
-                        if (widget.password == _myUser.password) {
+                      if (password != null) {
+                        if (password == _myUser.password) {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => FirstPage()));
+                                  builder: (context) =>
+                                      FirstPage(user: _myUser)));
                         } else {
                           Fluttertoast.showToast(
                               msg: "Wrong password, please correct",
@@ -155,9 +157,12 @@ class _EventishState extends State<Eventish> {
                     onPressed: () {
                       setState(() {
                         Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => RegisterPage()));
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RegisterPage()),
+                        ).then((val) {
+                          username = val;
+                        });
                       });
                     },
                   ),
@@ -185,11 +190,4 @@ Future<User> fetchUser(String username) async {
         fontSize: 16.0);
     throw Exception('Failed to load post');
   }
-}
-
-void _navigateAndGetUser(BuildContext context) async {
-  final result = await Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => RegisterPage()),
-  );
 }

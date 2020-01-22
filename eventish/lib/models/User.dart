@@ -1,12 +1,12 @@
 import 'Task.dart';
 
 class User {
-  String username;
+  String username = "";
   String firstname;
   String lastname;
   String id;
   String email;
-  String password;
+  String password = "";
   String phone;
   bool confirmed;
   List<Task> tasks;
@@ -40,10 +40,10 @@ class User {
         this.username.trim() +
         "\", " +
         "\"lastName\": \"" +
-        this.lastname +
+        this.lastname.trim() +
         "\", " +
         "\"firstName\": \"" +
-        this.firstname +
+        this.firstname.trim() +
         "\", " +
         "\"email\": \"" +
         this.email.trim() +

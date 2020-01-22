@@ -2,14 +2,14 @@ import 'package:eventish/models/User.dart';
 import 'package:uuid/uuid.dart';
 
 class Event {
-  final String organizer;
-  final Uuid id;
+  String organizer;
+  Uuid id;
   List<User> guests;
-  final Uuid location;
-  final String date;
-  final String status;
-  final bool complete;
-  final String name;
+  Uuid location;
+  String date;
+  String status;
+  bool complete;
+  String name;
   Event(
       {this.id,
       this.organizer,
@@ -19,6 +19,10 @@ class Event {
       this.status,
       this.complete,
       this.name});
+
+  factory Event.createFromOrganizer(String organizer) {
+    return Event(organizer: organizer);
+  }
 
   factory Event.fromJson(Map<String, dynamic> json) {
     return Event(

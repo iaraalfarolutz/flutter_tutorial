@@ -2,33 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:eventish/constants.dart';
 
 class MyBottomNavigationBar extends StatefulWidget {
+  final int currentpage;
+  final Function onItemTapped;
+  MyBottomNavigationBar(
+      {@required this.currentpage, @required this.onItemTapped});
   @override
   _MyBottomNavigationBarState createState() => _MyBottomNavigationBarState();
 }
 
 class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
-  int _selectedIndex = 0;
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Events',
-      style: kBottomNavigationBar,
-    ),
-    Text(
-      'Index 1: New Event',
-      style: kBottomNavigationBar,
-    ),
-    Text(
-      'Index 2: Tasks',
-      style: kBottomNavigationBar,
-    ),
-  ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
@@ -45,11 +27,15 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
           icon: Icon(Icons.playlist_add_check),
           title: Text('Tasks'),
         ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person),
+          title: Text('Profile'),
+        ),
       ],
-      currentIndex: _selectedIndex,
+      currentIndex: widget.currentpage,
+      onTap: widget.onItemTapped,
       selectedItemColor: kButtonColor,
       backgroundColor: Color(0xFF12173A),
-      onTap: _onItemTapped,
       type: BottomNavigationBarType.shifting,
     );
   }
