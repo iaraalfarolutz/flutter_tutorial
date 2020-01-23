@@ -1,12 +1,12 @@
 import 'package:uuid/uuid.dart';
 
 class Location {
-  final String name;
-  final Uuid id;
-  final double latitud;
-  final double longitud;
-  final bool confirmed;
-  final String owner;
+  String name;
+  Uuid id;
+  double latitud;
+  double longitud;
+  bool confirmed;
+  String owner;
 
   Location(
       {this.id,
@@ -15,6 +15,29 @@ class Location {
       this.longitud,
       this.confirmed,
       this.owner});
+
+  factory Location.createFromOwner(String owner) {
+    return Location(owner: owner);
+  }
+
+  String getInfo() {
+    String info = "{ \"name\": \"" +
+        this.name.trim() +
+        "\", " +
+        "\"latitud\": " +
+        this.latitud.toString() +
+        ", " +
+        "\"longitud\": " +
+        this.longitud.toString() +
+        ", " +
+        "\"confirmed\": " +
+        this.confirmed.toString() +
+        ", " +
+        "\"owner\": \"" +
+        this.owner.trim() +
+        "\"}";
+    return info;
+  }
 
   factory Location.fromJson(Map<String, dynamic> json) {
     return Location(

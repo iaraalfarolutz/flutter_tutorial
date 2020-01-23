@@ -99,6 +99,9 @@ class _EventishState extends State<Eventish> {
                 ),
               ),
             ),
+            SizedBox(
+              height: 20.0,
+            ),
             Container(
               child: RaisedButton(
                 color: kButtonColor,
