@@ -5,10 +5,7 @@ import 'package:eventish/screens/location_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:numberpicker/numberpicker.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:uuid/uuid.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:eventish/components/web_service.dart';
 import 'package:eventish/models/Location.dart';
 
 class AddEvent extends StatefulWidget {
@@ -160,7 +157,8 @@ class _AddEventState extends State<AddEvent> {
           onPressed: () {
             setState(() {
               event.date = mydate.toString();
-              myEvent = postEvent(event, location);
+              event.guests = guestsList;
+              myEvent = WebService.postEvent(event, location);
             });
           },
         ),
@@ -176,66 +174,27 @@ class _AddEventState extends State<AddEvent> {
         padding: const EdgeInsets.all(8),
         itemBuilder: (BuildContext context, int index) {
           return TextFormField(
-            validator: (value) {
-              if (value.isEmpty) {
-                return 'Please enter yours guest username';
-              }
-              return null;
-            },
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Enter your guest\'s username',
-            ),
-            cursorColor: kButtonColor,
-            onChanged: (text) {
-              setState(() {
-                //setchanges[index](widget, text);
+              validator: (value) {
+                if (value.isEmpty) {
+                  return 'Please enter yours guest username';
+                }
+                return null;
+              },
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Enter your guest\'s username',
+              ),
+              cursorColor: kButtonColor,
+              textInputAction: TextInputAction.done,
+              onFieldSubmitted: (term) {
+                WebService.fetchUser(term.trim()).then((result) {
+                  if (result != null) {
+                    guestsList.add(result);
+                  }
+                });
               });
-            },
-          );
         },
         separatorBuilder: (BuildContext context, int index) => const Divider(),
         itemCount: guests);
-  }
-}
-
-Future<Event> postLocation(String eventId, Location location) async {
-  String url = 'http://10.0.2.2:9000/events/$eventId/location';
-  Map<String, String> headers = {"Content-type": "application/json"};
-  String body = location.getInfo();
-  final response = await http.post(url, headers: headers, body: body);
-  if (response.statusCode == 201) {
-    Fluttertoast.showToast(
-        msg: "Location added!",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIos: 1,
-        fontSize: 16.0);
-    return Event.fromJson(json.decode(response.body));
-  } else {
-    throw Exception('Failed to load post');
-  }
-}
-
-Future<Event> postEvent(Event event, Location location) async {
-  String url = 'http://10.0.2.2:9000/events';
-  Map<String, String> headers = {"Content-type": "application/json"};
-  String body = event.getInfo();
-  final response = await http.post(url, headers: headers, body: body);
-  if (response.statusCode == 201) {
-    Fluttertoast.showToast(
-        msg: "Event added!",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIos: 1,
-        fontSize: 16.0);
-    if (location != null) {
-      return postLocation(
-          Event.fromJson(json.decode(response.body)).id, location);
-    } else {
-      return Event.fromJson(json.decode(response.body));
-    }
-  } else {
-    throw Exception('Failed to load post');
   }
 }

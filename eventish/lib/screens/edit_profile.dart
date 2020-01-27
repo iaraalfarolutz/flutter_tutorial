@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:eventish/constants.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:eventish/components/web_service.dart';
 import 'package:eventish/models/User.dart';
 
 class EditProfile extends StatefulWidget {
@@ -105,7 +103,7 @@ class _EditProfileState extends State<EditProfile> {
               onPressed: () {
                 setState(() {
                   if (_formKey.currentState.validate()) {
-                    user = updateUser(username, widget.user);
+                    user = WebService.updateUser(username, widget.user);
                   }
                 });
               },
@@ -115,7 +113,7 @@ class _EditProfileState extends State<EditProfile> {
               child: Text('Delete User'),
               onPressed: () {
                 setState(() {
-                  user = deleteUser(widget.user.username);
+                  user = WebService.deleteUser(widget.user.username);
                 });
               },
             ),
@@ -123,40 +121,5 @@ class _EditProfileState extends State<EditProfile> {
         ),
       ),
     );
-  }
-}
-
-Future<User> updateUser(String username, User user) async {
-  String url = 'http://10.0.2.2:9000/users/$username';
-  Map<String, String> headers = {"Content-type": "application/json"};
-  String body = user.getUserInfo();
-  final response = await http.put(url, headers: headers, body: body);
-  if (response.statusCode == 200) {
-    Fluttertoast.showToast(
-        msg: "User updated!",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIos: 1,
-        fontSize: 16.0);
-    return User.fromJson(json.decode(response.body));
-  } else {
-    throw Exception('Failed to load post');
-  }
-}
-
-Future<User> deleteUser(String username) async {
-  String url = 'http://10.0.2.2:9000/users/$username';
-  final response = await http.delete(url);
-  if (response.statusCode == 200) {
-    Fluttertoast.showToast(
-        msg: "User deleted!",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIos: 1,
-        fontSize: 16.0);
-    return User.fromJson(json.decode(response.body));
-  } else {
-    // If that response was not OK, throw an error.
-    throw Exception('Failed to load post');
   }
 }

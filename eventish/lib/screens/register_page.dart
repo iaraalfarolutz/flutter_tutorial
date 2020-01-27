@@ -2,7 +2,7 @@ import 'package:eventish/constants.dart';
 import 'package:eventish/models/User.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/http.dart' as http;
+import 'package:eventish/components/web_service.dart';
 
 class RegisterPage extends StatefulWidget {
   final User user;
@@ -109,7 +109,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 child: Text('Register'),
                 onPressed: () {
                   setState(() {
-                    postUser(_myUser).then((status) {
+                    WebService.postUser(_myUser).then((status) {
                       if (status == 200 || status == 201) {
                         Navigator.pop(context, _myUser.username);
                       } else
@@ -129,13 +129,4 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
-}
-
-Future<int> postUser(User user) async {
-  String url = 'http://10.0.2.2:9000/users';
-  Map<String, String> headers = {"Content-type": "application/json"};
-  String body = user.getUserInfo();
-  final response = await http.post(url, headers: headers, body: body);
-  // this API passes back the id of the new item added to the body
-  return response.statusCode;
 }

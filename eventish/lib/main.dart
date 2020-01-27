@@ -3,8 +3,7 @@ import 'package:eventish/screens/first_page.dart';
 import 'package:eventish/screens/register_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:eventish/components/web_service.dart';
 import 'package:eventish/models/User.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -108,7 +107,7 @@ class _EventishState extends State<Eventish> {
                 child: Text('Sign in'),
                 onPressed: () {
                   setState(() {
-                    fetchUser(username.trim()).then((result) {
+                    WebService.fetchUser(username.trim()).then((result) {
                       _myUser = result;
                       if (password != null) {
                         if (password == _myUser.password) {
@@ -176,21 +175,5 @@ class _EventishState extends State<Eventish> {
         ),
       ),
     );
-  }
-}
-
-Future<User> fetchUser(String username) async {
-  final response = await http.get('http://10.0.2.2:9000/users/$username');
-
-  if (response.statusCode == 200) {
-    return User.fromJson(json.decode(response.body));
-  } else {
-    Fluttertoast.showToast(
-        msg: "The user is not registrated",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIos: 1,
-        fontSize: 16.0);
-    throw Exception('Failed to load post');
   }
 }

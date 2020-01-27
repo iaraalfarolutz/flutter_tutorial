@@ -40,28 +40,29 @@ class _FirstPageState extends State<FirstPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData.dark().copyWith(
-          primaryColor: Color(0xFF12173A),
-          scaffoldBackgroundColor: Color(0xFF0A0D22),
+      title: 'Flutter Demo',
+      theme: ThemeData.dark().copyWith(
+        primaryColor: Color(0xFF12173A),
+        scaffoldBackgroundColor: Color(0xFF0A0D22),
+      ),
+      home: Scaffold(
+        appBar: AppBar(
+          title: Center(child: Text('Eventish')),
         ),
-        home: Scaffold(
-          appBar: AppBar(
-            title: Center(child: Text('Edit profile')),
-          ),
-          bottomNavigationBar: MyBottomNavigationBar(
-            currentpage: currentTab,
-            onItemTapped: (int index) async {
-              setState(() {
-                currentTab = index;
-                currentPage = pages[index];
-              });
-            },
-          ),
-          body: PageStorage(
-            child: currentPage,
-            bucket: bucket,
-          ),
-        ));
+        bottomNavigationBar: MyBottomNavigationBar(
+          currentpage: currentTab,
+          onItemTapped: (int index) async {
+            setState(() {
+              currentTab = index;
+              currentPage = pages[index];
+            });
+          },
+        ),
+        body: IndexedStack(
+          index: currentTab,
+          children: pages,
+        ),
+      ),
+    );
   }
 }

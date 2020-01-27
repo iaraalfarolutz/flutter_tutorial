@@ -1,11 +1,10 @@
 import 'package:eventish/models/User.dart';
-import 'package:uuid/uuid.dart';
 
 class Event {
   String organizer;
   String id;
   List<User> guests = new List<User>();
-  Uuid location;
+  String location;
   String date;
   String status;
   bool complete;
@@ -26,12 +25,12 @@ class Event {
 
   String getInfo() {
     String guests = "[";
-    if (this.guests != null) {
-      for (int i = 0; i < this.guests.length; i++) {
+    if (this.guests != null && this.guests.length > 1) {
+      for (int i = 0; i < this.guests.length - 1; i++) {
         guests += this.guests.elementAt(i).getUserInfo() + ",";
       }
     }
-    guests += "]";
+    guests += this.guests.elementAt(this.guests.length - 1).getUserInfo() + "]";
     String info = "{ \"name\": \"" +
         this.name.trim() +
         "\", " +
@@ -58,8 +57,11 @@ class Event {
   }
 
   factory Event.fromJson(Map<String, dynamic> json) {
-    var guestsFromJson = json['guests'];
-    List<User> guests = guestsFromJson.cast<User>();
+    List guestsFromJson = json['guests'];
+    List<User> guests = new List<User>();
+    for (int i = 0; i < guestsFromJson.length; i++) {
+      guests.add(User.fromJson(guestsFromJson.elementAt(i)));
+    }
     return Event(
         organizer: json['organizer'],
         id: json['_id'],

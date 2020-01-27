@@ -1,8 +1,6 @@
-import 'package:uuid/uuid.dart';
-
 class Location {
   String name;
-  Uuid id;
+  String id;
   double latitud;
   double longitud;
   bool confirmed;
