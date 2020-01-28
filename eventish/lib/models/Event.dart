@@ -29,8 +29,9 @@ class Event {
       for (int i = 0; i < this.guests.length - 1; i++) {
         guests += this.guests.elementAt(i).getUserInfo() + ",";
       }
+      guests += this.guests.elementAt(this.guests.length - 1).getUserInfo();
     }
-    guests += this.guests.elementAt(this.guests.length - 1).getUserInfo() + "]";
+    guests += "]";
     String info = "{ \"name\": \"" +
         this.name.trim() +
         "\", " +
@@ -54,6 +55,17 @@ class Event {
         "\" }";
 
     return info;
+  }
+
+  String getGuests() {
+    String guests = "[";
+    if (this.guests != null && this.guests.length > 1) {
+      for (int i = 0; i < this.guests.length - 1; i++) {
+        guests += this.guests.elementAt(i).username + ",";
+      }
+    }
+    guests += this.guests.elementAt(this.guests.length - 1).username + "]";
+    return guests;
   }
 
   factory Event.fromJson(Map<String, dynamic> json) {

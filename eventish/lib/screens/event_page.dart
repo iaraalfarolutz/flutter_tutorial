@@ -1,5 +1,6 @@
 import 'package:eventish/constants.dart';
 import 'package:eventish/models/User.dart';
+import 'package:eventish/screens/edit_event.dart';
 import 'package:eventish/screens/show_event.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -35,9 +36,6 @@ class _EventPageState extends State<EventPage> {
             if (snapshot.hasData) {
               return Flexible(
                 child: ListView.separated(
-//                  scrollDirection: Axis.vertical,
-//                  shrinkWrap: true,
-//                  physics: NeverScrollableScrollPhysics(),
                     padding: const EdgeInsets.all(8),
                     itemBuilder: (BuildContext context, int index) {
                       return GestureDetector(
@@ -51,9 +49,12 @@ class _EventPageState extends State<EventPage> {
                                 Expanded(
                                   child: Container(
                                       child: Text(
-                                          snapshot.data.elementAt(index).name,
+                                          snapshot.data
+                                              .elementAt(index)
+                                              .name
+                                              .toUpperCase(),
                                           style: TextStyle(
-                                              fontSize: 30.0,
+                                              fontSize: 25.0,
                                               color: kButtonColor))),
                                 ),
                                 Expanded(
@@ -70,6 +71,23 @@ class _EventPageState extends State<EventPage> {
                                       child: Text(snapshot.data
                                           .elementAt(index)
                                           .status)),
+                                ),
+                                Expanded(
+                                  child: RaisedButton(
+                                    color: kBackColor,
+                                    child: Text("EDIT"),
+                                    onPressed: () {
+                                      setState(() {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => EditEvent(
+                                                      event: snapshot.data
+                                                          .elementAt(index),
+                                                    )));
+                                      });
+                                    },
+                                  ),
                                 ),
                               ],
                             ),
@@ -91,7 +109,10 @@ class _EventPageState extends State<EventPage> {
                     itemCount: snapshot.data.length),
               );
             } else
-              return Text("${snapshot.error}");
+              return Expanded(
+                flex: 6,
+                child: Center(child: Text("There is no events yet")),
+              );
           },
         ),
         Padding(

@@ -17,15 +17,7 @@ class _EditProfileState extends State<EditProfile> {
   Future<User> user;
   Future<String> message;
 
-  final myController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-
-  @override
-  void dispose() {
-    // Clean up the controller when the widget is disposed.
-    myController.dispose();
-    super.dispose();
-  }
 
   @override
   void initState() {

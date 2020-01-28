@@ -1,8 +1,8 @@
 class Location {
   String name;
   String id;
-  double latitud;
-  double longitud;
+  double latitud = 0.0;
+  double longitud = 0.0;
   bool confirmed;
   String owner;
 
@@ -41,8 +41,8 @@ class Location {
     return Location(
       name: json['name'],
       id: json['_id'],
-      latitud: json['latitud'],
-      longitud: json['longitud'],
+      latitud: double.parse(json['latitud'].toString()),
+      longitud: double.parse(json['longitud'].toString()),
       owner: json['owner'],
       confirmed: json['confirmed'],
     );

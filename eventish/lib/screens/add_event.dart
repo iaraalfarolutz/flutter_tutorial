@@ -10,7 +10,11 @@ import 'package:eventish/models/Location.dart';
 
 class AddEvent extends StatefulWidget {
   final User user;
-  AddEvent({this.user});
+  final Event event;
+  final String action;
+  final Function request;
+  AddEvent(
+      {this.user, this.event, @required this.action, @required this.request});
   @override
   _AddEventState createState() => _AddEventState();
 }
@@ -20,16 +24,23 @@ class _AddEventState extends State<AddEvent> {
   Future<Event> myEvent;
   Location location;
   DateTime mydate;
-  int guests = 1;
+  int guests;
   ListView guestsWidgets;
   List<User> guestsList = new List<User>();
   final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
-    event = Event.createFromOrganizer(widget.user.username);
-    event.complete = false;
-    event.status = "waiting for guests to confirm";
+    if (widget.event != null) {
+      event = widget.event;
+      guests = widget.event.guests.length > 1 ? widget.event.guests.length : 1;
+      guestsList = widget.event.guests;
+    } else {
+      event = Event.createFromOrganizer(widget.user.username);
+      event.complete = false;
+      event.status = "waiting for guests to confirm";
+      guests = 1;
+    }
     updateGuestsWidgets(1);
     super.initState();
   }
@@ -49,6 +60,7 @@ class _AddEventState extends State<AddEvent> {
                   labelText: 'Event name',
                 ),
                 cursorColor: kButtonColor,
+                initialValue: event.name,
                 onChanged: (text) {
                   setState(() {
                     event.name = text;
@@ -69,7 +81,11 @@ class _AddEventState extends State<AddEvent> {
                     setState(() {
                       mydate = date;
                     });
-                  }, currentTime: DateTime.now(), locale: LocaleType.es);
+                  },
+                      currentTime: event.date != null
+                          ? DateTime.parse(event.date)
+                          : DateTime.now(),
+                      locale: LocaleType.es);
                 },
                 child: Text(
                   'DATE',
@@ -153,12 +169,16 @@ class _AddEventState extends State<AddEvent> {
         ),
         RaisedButton(
           color: kButtonColor,
-          child: Text('SAVE'),
+          child: Text(widget.action.toUpperCase()),
           onPressed: () {
             setState(() {
               event.date = mydate.toString();
-              event.guests = guestsList;
-              myEvent = WebService.postEvent(event, location);
+              if (widget.action == "UPDATE") {
+                myEvent = widget.request(event, location, guestsList);
+              } else {
+                event.guests = guestsList;
+                myEvent = widget.request(this.event, this.location);
+              }
             });
           },
         ),
@@ -186,6 +206,9 @@ class _AddEventState extends State<AddEvent> {
               ),
               cursorColor: kButtonColor,
               textInputAction: TextInputAction.done,
+              initialValue: guestsList.length > index
+                  ? guestsList.elementAt(index).username
+                  : "",
               onFieldSubmitted: (term) {
                 WebService.fetchUser(term.trim()).then((result) {
                   if (result != null) {

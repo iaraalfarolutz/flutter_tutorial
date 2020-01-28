@@ -1,3 +1,4 @@
+import 'package:eventish/components/web_service.dart';
 import 'package:eventish/screens/add_event.dart';
 import 'package:eventish/screens/edit_profile.dart';
 import 'package:eventish/screens/event_page.dart';
@@ -27,8 +28,15 @@ class _FirstPageState extends State<FirstPage> {
   int currentTab;
   @override
   void initState() {
+    Function req = (event, location) {
+      return WebService.postEvent(event, location);
+    };
     edit = EditProfile(user: widget.user);
-    add = AddEvent(user: widget.user);
+    add = AddEvent(
+      user: widget.user,
+      request: req,
+      action: "SAVE",
+    );
     event = EventPage(user: widget.user);
     task = TaskPage(user: widget.user);
     pages = [event, add, task, edit];

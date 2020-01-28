@@ -12,7 +12,38 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  User _myUser = User();
+  static User _myUser = User();
+  final _formKey = GlobalKey<FormState>();
+
+  final List<String> entries = <String>[
+    'Username',
+    'First name',
+    'Last name',
+    'Email',
+    'Password',
+    'Phone'
+  ];
+  final List<Function> setchanges = <Function>[
+    (text) {
+      _myUser.username = text.trim();
+    },
+    (text) {
+      _myUser.firstname = text;
+    },
+    (text) {
+      _myUser.lastname = text;
+    },
+    (text) {
+      _myUser.email = text.trim();
+    },
+    (text) {
+      _myUser.password = text.trim();
+    },
+    (text) {
+      _myUser.phone = text.trim();
+    },
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,102 +60,68 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       ),
       body: SafeArea(
-        child: ListView(
-          children: <Widget>[
-            TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Username',
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Flexible(
+                child: ListView.separated(
+                    padding: const EdgeInsets.all(8),
+                    itemCount: entries.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return TextFormField(
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please enter your ${entries[index]}';
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: entries[index],
+                        ),
+                        cursorColor: kButtonColor,
+                        onChanged: (text) {
+                          setState(() {
+                            setchanges[index](text);
+                          });
+                        },
+                      );
+                    },
+                    separatorBuilder: (BuildContext context, int index) =>
+                        const Divider()),
               ),
-              cursorColor: kButtonColor,
-              onChanged: (text) {
-                setState(() {
-                  _myUser.username = text.trim();
-                });
-              },
-            ),
-            TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'First Name',
-              ),
-              cursorColor: kButtonColor,
-              onChanged: (text) {
-                setState(() {
-                  _myUser.firstname = text.trim();
-                });
-              },
-            ),
-            TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Last Name',
-              ),
-              cursorColor: kButtonColor,
-              onChanged: (text) {
-                setState(() {
-                  _myUser.lastname = text.trim();
-                });
-              },
-            ),
-            TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Email',
-              ),
-              cursorColor: kButtonColor,
-              onChanged: (text) {
-                setState(() {
-                  _myUser.email = text.trim();
-                });
-              },
-            ),
-            TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Password',
-              ),
-              cursorColor: kButtonColor,
-              onChanged: (text) {
-                setState(() {
-                  _myUser.password = text.trim();
-                });
-              },
-            ),
-            TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Phone',
-              ),
-              cursorColor: kButtonColor,
-              onChanged: (text) {
-                setState(() {
-                  _myUser.phone = text.trim();
-                });
-              },
-            ),
-            Container(
-              child: RaisedButton(
-                color: kButtonColor,
-                child: Text('Register'),
-                onPressed: () {
-                  setState(() {
-                    WebService.postUser(_myUser).then((status) {
-                      if (status == 200 || status == 201) {
-                        Navigator.pop(context, _myUser.username);
-                      } else
-                        Fluttertoast.showToast(
-                            msg: "There was an error, please try again",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.BOTTOM,
-                            timeInSecForIos: 1,
-                            fontSize: 16.0);
-                    });
-                  });
-                },
-              ),
-            ),
-          ],
+              Container(
+                child: RaisedButton(
+                    color: kButtonColor,
+                    child: Text('REGISTER'),
+                    onPressed: () {
+                      setState(() {
+                        if (_formKey.currentState.validate()) {
+                          WebService.postUser(_myUser).then((status) {
+                            if (status == 201) {
+                              Navigator.pop(context, _myUser.username);
+                              Fluttertoast.showToast(
+                                  msg: "User registrated correctly",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIos: 1,
+                                  fontSize: 16.0);
+                            } else
+                              Fluttertoast.showToast(
+                                  msg: "There was an error, please try again",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIos: 1,
+                                  fontSize: 16.0);
+                          });
+                        }
+                      });
+                    }),
+              )
+            ],
+          ),
         ),
       ),
     );
