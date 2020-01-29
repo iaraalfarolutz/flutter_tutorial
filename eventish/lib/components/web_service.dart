@@ -59,6 +59,22 @@ class WebService {
     }
   }
 
+  static Future<Event> deleteEvent(String eventId) async {
+    String url = baseUrl + '/events/$eventId';
+    final response = await http.delete(url);
+    if (response.statusCode == 200) {
+      Fluttertoast.showToast(
+          msg: "Event deleted!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          fontSize: 16.0);
+      return Event.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to load post');
+    }
+  }
+
   static Future<Event> postLocation(String eventId, Location location) async {
     String url = baseUrl + '/events/$eventId/location';
     String body = location.getInfo();
@@ -161,10 +177,18 @@ class WebService {
   }
 
   static Future<Event> updateEvent(
-      Event event, Location location, List<String> guests) async {
-    String url = baseUrl + '/events';
-    String body = "{ \"date\":" + event.date + ", \"name\":" + event.name + "}";
-    final response = await http.put(url, headers: headers, body: body);
+      Event event, Location location, List<User> guests) async {
+    String eventId = event.id;
+    String url = baseUrl + '/events/$eventId';
+    String body;
+    Map<String, dynamic> mbody = {'date': event.date, 'name': event.name};
+    final response = await http.put(url,
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: mbody,
+        encoding: Encoding.getByName('utf-8'));
     if (response.statusCode == 200) {
       Fluttertoast.showToast(
           msg: "Event updated!",
@@ -181,8 +205,8 @@ class WebService {
       if (guests != null && guests.length > 1) {
         body = "{ \"guests\": [";
         for (int i = 0; i < guests.length - 1; i++)
-          body += guests.elementAt(i) + ",";
-        body += guests.elementAt(guests.length - 1) + "] }";
+          body += "\"" + guests.elementAt(i).username + "\"" + ",";
+        body += "\"" + guests.elementAt(guests.length - 1).username + "\"] }";
         return updateEventGuests(event, body);
       }
       return Event.fromJson(json.decode(response.body));
@@ -215,7 +239,7 @@ class WebService {
   }
 
   static void removeGuestsOfEvent(String eventId, String guestsList) async {
-    String url = baseUrl + '/events/users/$eventId/delete';
+    String url = baseUrl + '/events/users/$eventId';
     final uri = Uri.parse(url);
     final request = http.Request("DELETE", uri);
     request.headers.addAll(headers);

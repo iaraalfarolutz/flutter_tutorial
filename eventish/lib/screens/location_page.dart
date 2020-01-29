@@ -4,7 +4,6 @@ import 'package:eventish/models/Location.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:eventish/models/Event.dart';
-import 'package:flutter/services.dart';
 
 import '../constants.dart';
 

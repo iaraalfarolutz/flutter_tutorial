@@ -60,10 +60,8 @@ class _EventPageState extends State<EventPage> {
                                 Expanded(
                                   child: Container(
                                       color: kCardColor,
-                                      child: Text(snapshot.data
-                                          .elementAt(index)
-                                          .date
-                                          .substring(0, 16))),
+                                      child: Text(
+                                          snapshot.data.elementAt(index).date)),
                                 ),
                                 Expanded(
                                   child: Container(

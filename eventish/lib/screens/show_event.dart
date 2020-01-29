@@ -99,7 +99,9 @@ class _ShowEventState extends State<ShowEvent> {
                                   Expanded(
                                     child: Container(
                                         child: Text(
-                                            widget.event.guests.first.username,
+                                            widget.event.guests
+                                                .elementAt(index)
+                                                .username,
                                             style: TextStyle(
                                                 fontSize: 30.0,
                                                 color: kButtonColor))),
@@ -110,7 +112,17 @@ class _ShowEventState extends State<ShowEvent> {
                             separatorBuilder:
                                 (BuildContext context, int index) =>
                                     const Divider(),
-                            itemCount: widget.event.guests.length))
+                            itemCount: widget.event.guests.length)),
+                    RaisedButton(
+                      color: kButtonColor,
+                      child: Text('DELETE'),
+                      onPressed: () {
+                        setState(() {
+                          WebService.deleteEvent(widget.event.id);
+                          Navigator.pop(context);
+                        });
+                      },
+                    )
                   ],
                 ),
               ),
