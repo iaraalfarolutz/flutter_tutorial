@@ -16,21 +16,15 @@ class _EditEventState extends State<EditEvent> {
   };
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData.dark().copyWith(
-        primaryColor: Color(0xFF12173A),
-        scaffoldBackgroundColor: Color(0xFF0A0D22),
-      ),
-      home: Scaffold(
-          appBar: AppBar(
-            title: Center(child: Text('Eventish')),
-          ),
-          body: AddEvent(
-            event: widget.event,
-            action: "UPDATE",
-            request: req,
-          )),
-    );
+    return Scaffold(
+        backgroundColor: Color(0xFF0A0D22),
+        appBar: AppBar(
+          title: Center(child: Text('Eventish')),
+        ),
+        body: AddEvent(
+          event: widget.event,
+          action: "UPDATE",
+          request: req,
+        ));
   }
 }

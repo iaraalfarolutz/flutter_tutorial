@@ -1,17 +1,15 @@
-import 'dart:js';
-
+import 'package:eventish/models/User.dart';
 import 'package:flutter/material.dart';
-
 import '../constants.dart';
+import 'guest_list.dart';
 
 // needs to be StatefulWidget, so we can keep track of the count of the fields internally
 class GuestList extends StatefulWidget {
-  const GuestList({this.initialCount, this.guests, this.updater});
+  const GuestList({this.initialCount, this.users});
 
   // also allow for a dynamic number of starting players
   final int initialCount;
-  final List<String> guests;
-  final ValueChanged<List<String>> updater;
+  final List<User> users;
 
   @override
   _GuestListState createState() => _GuestListState();
@@ -20,8 +18,10 @@ class GuestList extends StatefulWidget {
 class _GuestListState extends State<GuestList> {
   int fieldCount = 0;
   int nextIndex = 0;
+
   // you must keep track of the TextEditingControllers if you want the values to persist correctly
   List<TextEditingController> controllers = <TextEditingController>[];
+  GuestListSingleton singleton = new GuestListSingleton();
 
   // create the list of TextFields, based off the list of TextControllers
   List<Widget> _buildList() {
@@ -29,23 +29,24 @@ class _GuestListState extends State<GuestList> {
     // fill in keys if the list is not long enough (in case we added one)
     if (controllers.length < fieldCount) {
       for (i = controllers.length; i < fieldCount; i++) {
-        controllers.add(TextEditingController());
+        if (widget.users != null)
+          controllers.add(
+              TextEditingController(text: widget.users.elementAt(i).username));
+        else
+          controllers.add(TextEditingController());
       }
     }
-
-    sendUpdates(getUsers());
     i = 0;
     // cycle through the controllers, and recreate each, one per available controller
     return controllers.map<Widget>((TextEditingController controller) {
       int displayNumber = i + 1;
       i++;
-      sendUpdates(getUsers());
       return TextField(
         controller: controller,
         maxLength: 20,
         onSubmitted: (text) {
           setState(() {
-            sendUpdates(getUsers());
+            singleton.addGuest(text);
           });
         },
         decoration: InputDecoration(
@@ -61,7 +62,7 @@ class _GuestListState extends State<GuestList> {
               setState(() {
                 fieldCount--;
                 controllers.remove(controller);
-                sendUpdates(getUsers());
+                singleton.removeGuest(controller.text);
               });
             },
           ),
@@ -82,7 +83,7 @@ class _GuestListState extends State<GuestList> {
           // when adding a player, we only need to inc the fieldCount, because the _buildList()
           // will handle the creation of the new TextEditingController
           setState(() {
-            sendUpdates(getUsers());
+            // singleton.addAllGuests(controllers);
             fieldCount++;
           });
         },
@@ -130,21 +131,5 @@ class _GuestListState extends State<GuestList> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-  }
-
-  List<String> getUsers() {
-    List<String> users = new List<String>();
-    for (int i = 0; i < controllers.length; i++) {
-      users.add(controllers.elementAt(i).text);
-    }
-    return users;
-  }
-
-  void _handleBackupChanged(bool value) {
-    sendUpdates(getUsers());
-  }
-
-  void sendUpdates(List<String> value) {
-    if (widget.updater != null) widget.updater(value);
   }
 }

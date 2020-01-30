@@ -101,7 +101,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         if (_formKey.currentState.validate()) {
                           WebService.postUser(_myUser).then((status) {
                             if (status == 201) {
-                              Navigator.pop(context, _myUser.username);
+                              Navigator.of(context).pop(_myUser.username);
                               Fluttertoast.showToast(
                                   msg: "User registrated correctly",
                                   toastLength: Toast.LENGTH_SHORT,

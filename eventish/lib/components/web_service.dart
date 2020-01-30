@@ -4,6 +4,7 @@ import 'package:eventish/models/User.dart';
 import 'package:eventish/models/Event.dart';
 import 'package:eventish/models/Location.dart';
 import 'package:eventish/models/Task.dart';
+import 'package:eventish/screens/first_page.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
@@ -33,22 +34,6 @@ class WebService {
     if (response.statusCode == 200) {
       Fluttertoast.showToast(
           msg: "User updated!",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIos: 1,
-          fontSize: 16.0);
-      return User.fromJson(json.decode(response.body));
-    } else {
-      throw Exception('Failed to load post');
-    }
-  }
-
-  static Future<User> deleteUser(String username) async {
-    String url = baseUrl + '/users/$username';
-    final response = await http.delete(url);
-    if (response.statusCode == 200) {
-      Fluttertoast.showToast(
-          msg: "User deleted!",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIos: 1,
@@ -174,6 +159,96 @@ class WebService {
     final response = await http.post(url, headers: headers, body: body);
     // this API passes back the id of the new item added to the body
     return response.statusCode;
+  }
+
+  static Future<Task> postTask(Task task) async {
+    String url = baseUrl + '/tasks';
+    String body = task.getTaskInfo();
+    final response = await http.post(url, headers: headers, body: body);
+    return Task.fromJson(json.decode(response.body));
+  }
+
+  static Future<Task> updateTask(String taskId, Task task) async {
+    String url = baseUrl + '/tasks/$taskId';
+    String body = task.getTaskInfo();
+    final response = await http.put(url, headers: headers, body: body);
+    if (response.statusCode == 200) {
+      Fluttertoast.showToast(
+          msg: "User updated!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          fontSize: 16.0);
+      return Task.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to load task');
+    }
+  }
+
+  static Future<Task> fetchTask(String taskId) async {
+    final response = await http.get(baseUrl + '/tasks/$taskId');
+    if (response.statusCode == 200) {
+      return Task.fromJson(json.decode(response.body));
+    } else {
+      Fluttertoast.showToast(
+          msg: "The task doesn't exists",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          fontSize: 16.0);
+      throw Exception('Failed to load task');
+    }
+  }
+
+  static Future<List<Task>> getTasksByEvent(String eventId) async {
+    final response = await http.get(baseUrl + '/tasks/events/$eventId');
+    if (response.statusCode == 200) {
+      List<Task> tasks;
+      tasks = (json.decode(response.body) as List)
+          .map((i) => Task.fromJson(i))
+          .toList();
+      return tasks;
+    } else {
+      Fluttertoast.showToast(
+          msg: "The event $eventId is not correct",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          fontSize: 16.0);
+      throw Exception('Failed to load');
+    }
+  }
+
+  static Future<Task> deleteTask(String taskId) async {
+    String url = baseUrl + '/tasks/$taskId';
+    final response = await http.delete(url);
+    if (response.statusCode == 200) {
+      Fluttertoast.showToast(
+          msg: "Task deleted!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          fontSize: 16.0);
+      return Task.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to load post');
+    }
+  }
+
+  static Future<User> deleteUser(String username) async {
+    String url = baseUrl + '/users/$username';
+    final response = await http.delete(url);
+    if (response.statusCode == 200) {
+      Fluttertoast.showToast(
+          msg: "User deleted!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          fontSize: 16.0);
+      return User.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to load post');
+    }
   }
 
   static Future<Event> updateEvent(

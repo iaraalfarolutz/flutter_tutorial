@@ -1,5 +1,5 @@
+import 'package:eventish/components/guest_list.dart';
 import 'package:eventish/components/text_input_fields.dart';
-import 'package:eventish/components/web_service.dart';
 import 'package:eventish/models/Event.dart';
 import 'package:eventish/constants.dart';
 import 'package:eventish/models/User.dart';
@@ -13,6 +13,7 @@ class AddEvent extends StatefulWidget {
   final Event event;
   final String action;
   final Function request;
+
   AddEvent(
       {this.user, this.event, @required this.action, @required this.request});
   @override
@@ -25,11 +26,7 @@ class _AddEventState extends State<AddEvent> {
   Location location;
   DateTime mydate;
   List<User> guestsList = new List<User>();
-  List<String> _configuration;
-
-  void configurationUpdater(List<String> value) {
-    _configuration = value;
-  }
+  GuestListSingleton singleton = new GuestListSingleton();
 
   @override
   void initState() {
@@ -103,13 +100,14 @@ class _AddEventState extends State<AddEvent> {
                 ),
                 onPressed: () {
                   setState(() {
-                    Navigator.push(
-                      context,
+                    Navigator.of(context)
+                        .push(
                       MaterialPageRoute(
                           builder: (context) => LocationPage(
                                 event: event,
                               )),
-                    ).then((val) {
+                    )
+                        .then((val) {
                       location = val;
                     });
                   });
@@ -126,9 +124,8 @@ class _AddEventState extends State<AddEvent> {
                 thickness: 2.0,
               ),
               GuestList(
-                initialCount: 1,
-                updater: configurationUpdater,
-                guests: _configuration,
+                initialCount: event.guests == null ? 1 : event.guests.length,
+                users: event.guests,
               ),
             ],
           ),
@@ -137,61 +134,17 @@ class _AddEventState extends State<AddEvent> {
           color: kButtonColor,
           child: Text(widget.action.toUpperCase()),
           onPressed: () {
-            setState(() {
-              for (int i = 0; i < _configuration.length; i++) {
-                WebService.fetchUser(_configuration.elementAt(i).trim())
-                    .then((result) {
-                  if (result != null) {
-                    guestsList.add(result);
-                  }
-                });
-              }
-              event.date = mydate == null ? event.date : mydate.toString();
-              if (widget.action == "UPDATE") {
-                myEvent = widget.request(event, location, guestsList);
-              } else {
-                event.guests = guestsList;
-                myEvent = widget.request(this.event, this.location);
-              }
-            });
+            guestsList = singleton.guests;
+            event.date = mydate == null ? event.date : mydate.toString();
+            if (widget.action == "UPDATE") {
+              myEvent = widget.request(event, location, guestsList);
+            } else {
+              event.guests = guestsList;
+              myEvent = widget.request(this.event, this.location);
+            }
           },
         ),
       ],
     );
   }
-
-//  void updateGuestsWidgets(int guests) {
-//    guestsWidgets = ListView.separated(
-//        scrollDirection: Axis.vertical,
-//        shrinkWrap: true,
-//        physics: NeverScrollableScrollPhysics(),
-//        padding: const EdgeInsets.all(8),
-//        itemBuilder: (BuildContext context, int index) {
-//          return TextFormField(
-//              validator: (value) {
-//                if (value.isEmpty) {
-//                  return 'Please enter yours guest username';
-//                }
-//                return null;
-//              },
-//              decoration: InputDecoration(
-//                border: OutlineInputBorder(),
-//                labelText: 'Enter your guest\'s username',
-//              ),
-//              cursorColor: kButtonColor,
-//              textInputAction: TextInputAction.done,
-//              initialValue: guestsList.length > index
-//                  ? guestsList.elementAt(index).username
-//                  : "",
-//              onFieldSubmitted: (term) {
-//                WebService.fetchUser(term.trim()).then((result) {
-//                  if (result != null) {
-//                    guestsList.add(result);
-//                  }
-//                });
-//              });
-//        },
-//        separatorBuilder: (BuildContext context, int index) => const Divider(),
-//        itemCount: guests);
-//  }
 }

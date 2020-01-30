@@ -111,11 +111,8 @@ class _EventishState extends State<Eventish> {
                       _myUser = result;
                       if (password != null) {
                         if (password == _myUser.password) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      FirstPage(user: _myUser)));
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => FirstPage(user: _myUser)));
                         } else {
                           Fluttertoast.showToast(
                               msg: "Wrong password, please correct",
@@ -158,11 +155,12 @@ class _EventishState extends State<Eventish> {
                     ),
                     onPressed: () {
                       setState(() {
-                        Navigator.push(
-                          context,
+                        Navigator.of(context)
+                            .push(
                           MaterialPageRoute(
                               builder: (context) => RegisterPage()),
-                        ).then((val) {
+                        )
+                            .then((val) {
                           username = val;
                         });
                       });

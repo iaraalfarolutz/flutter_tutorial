@@ -1,11 +1,14 @@
+import 'package:eventish/models/Event.dart';
 import 'package:flutter/material.dart';
 import 'package:eventish/models/Location.dart';
 import 'package:eventish/constants.dart';
 import 'package:flutter/services.dart';
 
 class LocationEdit extends StatefulWidget {
-  Location location;
-  LocationEdit({@required this.location});
+  final Location location;
+  final Event event;
+  final Function req;
+  LocationEdit({@required this.location, this.event, this.req});
   @override
   _LocationEditState createState() => _LocationEditState();
 }
@@ -122,7 +125,9 @@ class _LocationEditState extends State<LocationEdit> {
           color: kButtonColor,
           child: Text('SAVE'),
           onPressed: () {
-            Navigator.pop(context, widget.location);
+            widget.req(widget.event.id, widget.location).then((result) {
+              Navigator.of(context).pop(widget.location);
+            });
           },
         )
       ],

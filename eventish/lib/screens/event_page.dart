@@ -76,9 +76,8 @@ class _EventPageState extends State<EventPage> {
                                     child: Text("EDIT"),
                                     onPressed: () {
                                       setState(() {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
+                                        Navigator.of(context)
+                                            .push(MaterialPageRoute(
                                                 builder: (context) => EditEvent(
                                                       event: snapshot.data
                                                           .elementAt(index),
@@ -92,13 +91,11 @@ class _EventPageState extends State<EventPage> {
                           ),
                         ),
                         onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ShowEvent(
-                                  event: snapshot.data.elementAt(index),
-                                ),
-                              ));
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => ShowEvent(
+                              event: snapshot.data.elementAt(index),
+                            ),
+                          ));
                         },
                       );
                     },

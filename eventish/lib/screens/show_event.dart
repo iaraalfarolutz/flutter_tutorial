@@ -119,7 +119,7 @@ class _ShowEventState extends State<ShowEvent> {
                       onPressed: () {
                         setState(() {
                           WebService.deleteEvent(widget.event.id);
-                          Navigator.pop(context);
+                          Navigator.of(context).pop();
                         });
                       },
                     )
@@ -133,7 +133,7 @@ class _ShowEventState extends State<ShowEvent> {
                 child: Icon(Icons.arrow_back),
                 backgroundColor: kButtonColor,
                 onPressed: () {
-                  Navigator.pop(context);
+                  Navigator.of(context).pop();
                 },
               ),
             )

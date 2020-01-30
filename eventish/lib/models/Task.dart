@@ -26,4 +26,23 @@ class Task {
       confirmed: json['confirmed'],
     );
   }
+
+  String getTaskInfo() {
+    String info = "{ \"title\": \"" +
+        this.title.trim() +
+        "\", " +
+        "\"event\": \"" +
+        this.eventId.toString() +
+        "\", " +
+        "\"user\": \"" +
+        this.user.trim() +
+        "\", " +
+        "\"description\": \"" +
+        this.description.trim() +
+        "\", " +
+        "\"confirmed\": \"" +
+        this.confirmed.toString() +
+        "\"}";
+    return info;
+  }
 }
