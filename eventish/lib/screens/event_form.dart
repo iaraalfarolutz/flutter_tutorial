@@ -1,26 +1,31 @@
-import 'package:eventish/components/guest_list.dart';
-import 'package:eventish/components/text_input_fields.dart';
+import 'package:eventish/components/TabNavigator.dart';
+import 'package:eventish/components/guest_list_singleton.dart';
+import 'package:eventish/components/guest_list_form.dart';
 import 'package:eventish/models/Event.dart';
 import 'package:eventish/constants.dart';
 import 'package:eventish/models/User.dart';
-import 'package:eventish/screens/location_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:eventish/models/Location.dart';
 
-class AddEvent extends StatefulWidget {
+class EventForm extends StatefulWidget {
   final User user;
   final Event event;
   final String action;
   final Function request;
+  final Function onPush;
 
-  AddEvent(
-      {this.user, this.event, @required this.action, @required this.request});
+  EventForm(
+      {this.user,
+      this.event,
+      @required this.action,
+      @required this.request,
+      @required this.onPush});
   @override
-  _AddEventState createState() => _AddEventState();
+  _EventFormState createState() => _EventFormState();
 }
 
-class _AddEventState extends State<AddEvent> {
+class _EventFormState extends State<EventForm> {
   Event event;
   Future<Event> myEvent;
   Location location;
@@ -100,13 +105,9 @@ class _AddEventState extends State<AddEvent> {
                 ),
                 onPressed: () {
                   setState(() {
-                    Navigator.of(context)
-                        .push(
-                      MaterialPageRoute(
-                          builder: (context) => LocationPage(
-                                event: event,
-                              )),
-                    )
+                    widget
+                        .onPush(
+                            event: event, nextPage: TabNavigatorRoutes.location)
                         .then((val) {
                       location = val;
                     });
@@ -124,7 +125,9 @@ class _AddEventState extends State<AddEvent> {
                 thickness: 2.0,
               ),
               GuestList(
-                initialCount: event.guests == null ? 1 : event.guests.length,
+                initialCount: (event.guests == null || event.guests.isEmpty)
+                    ? 1
+                    : event.guests.length,
                 users: event.guests,
               ),
             ],

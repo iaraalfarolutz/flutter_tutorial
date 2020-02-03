@@ -1,21 +1,21 @@
+import 'package:eventish/components/TabNavigator.dart';
 import 'package:eventish/constants.dart';
 import 'package:eventish/models/User.dart';
-import 'package:eventish/screens/edit_event.dart';
-import 'package:eventish/screens/show_event.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:eventish/models/Event.dart';
 import 'package:eventish/components/web_service.dart';
 
-class EventPage extends StatefulWidget {
+class EventListPage extends StatefulWidget {
   final User user;
-  EventPage({this.user});
+  final Function onPush;
+  EventListPage({this.user, this.onPush});
 
   @override
-  _EventPageState createState() => _EventPageState();
+  _EventListPageState createState() => _EventListPageState();
 }
 
-class _EventPageState extends State<EventPage> {
+class _EventListPageState extends State<EventListPage> {
   Future<List<Event>> futureEvents;
 
   @override
@@ -76,12 +76,11 @@ class _EventPageState extends State<EventPage> {
                                     child: Text("EDIT"),
                                     onPressed: () {
                                       setState(() {
-                                        Navigator.of(context)
-                                            .push(MaterialPageRoute(
-                                                builder: (context) => EditEvent(
-                                                      event: snapshot.data
-                                                          .elementAt(index),
-                                                    )));
+                                        widget.onPush(
+                                            event:
+                                                snapshot.data.elementAt(index),
+                                            nextPage:
+                                                TabNavigatorRoutes.editEvent);
                                       });
                                     },
                                   ),
@@ -91,11 +90,9 @@ class _EventPageState extends State<EventPage> {
                           ),
                         ),
                         onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => ShowEvent(
-                              event: snapshot.data.elementAt(index),
-                            ),
-                          ));
+                          widget.onPush(
+                              nextPage: TabNavigatorRoutes.showEvent,
+                              event: snapshot.data.elementAt(index));
                         },
                       );
                     },

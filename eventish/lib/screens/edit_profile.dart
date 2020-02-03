@@ -7,7 +7,8 @@ import 'package:eventish/models/User.dart';
 
 class EditProfile extends StatefulWidget {
   final User user;
-  EditProfile({this.user});
+  final Function onPush;
+  EditProfile({this.user, this.onPush});
   @override
   _EditProfileState createState() => _EditProfileState();
 }

@@ -125,9 +125,7 @@ class _LocationEditState extends State<LocationEdit> {
           color: kButtonColor,
           child: Text('SAVE'),
           onPressed: () {
-            widget.req(widget.event.id, widget.location).then((result) {
-              Navigator.of(context).pop(widget.location);
-            });
+            Navigator.of(context).pop(widget.location);
           },
         )
       ],

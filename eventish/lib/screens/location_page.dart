@@ -9,7 +9,8 @@ import '../constants.dart';
 
 class LocationPage extends StatefulWidget {
   final Event event;
-  LocationPage({this.event});
+  final Function onPush;
+  LocationPage({this.event, this.onPush});
   @override
   _LocationPageState createState() => _LocationPageState();
 }
@@ -40,10 +41,6 @@ class _LocationPageState extends State<LocationPage> {
     return Scaffold(
       backgroundColor: kBackColor,
       drawerScrimColor: kCardColor,
-      appBar: AppBar(
-        title: Center(child: Text('Add Location')),
-        backgroundColor: kButtonColor,
-      ),
       body: FutureBuilder<Location>(
         future: location,
         builder: (context, snapshot) {

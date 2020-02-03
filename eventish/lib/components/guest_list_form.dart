@@ -1,7 +1,7 @@
 import 'package:eventish/models/User.dart';
 import 'package:flutter/material.dart';
 import '../constants.dart';
-import 'guest_list.dart';
+import 'guest_list_singleton.dart';
 
 // needs to be StatefulWidget, so we can keep track of the count of the fields internally
 class GuestList extends StatefulWidget {
@@ -19,17 +19,15 @@ class _GuestListState extends State<GuestList> {
   int fieldCount = 0;
   int nextIndex = 0;
 
-  // you must keep track of the TextEditingControllers if you want the values to persist correctly
   List<TextEditingController> controllers = <TextEditingController>[];
   GuestListSingleton singleton = new GuestListSingleton();
 
   // create the list of TextFields, based off the list of TextControllers
   List<Widget> _buildList() {
     int i;
-    // fill in keys if the list is not long enough (in case we added one)
     if (controllers.length < fieldCount) {
       for (i = controllers.length; i < fieldCount; i++) {
-        if (widget.users != null)
+        if (widget.users != null && widget.users.isNotEmpty)
           controllers.add(
               TextEditingController(text: widget.users.elementAt(i).username));
         else
@@ -37,7 +35,6 @@ class _GuestListState extends State<GuestList> {
       }
     }
     i = 0;
-    // cycle through the controllers, and recreate each, one per available controller
     return controllers.map<Widget>((TextEditingController controller) {
       int displayNumber = i + 1;
       i++;
@@ -56,9 +53,6 @@ class _GuestListState extends State<GuestList> {
           suffixIcon: IconButton(
             icon: Icon(Icons.clear),
             onPressed: () {
-              // when removing a TextField, you must do two things:
-              // 1. decrement the number of controllers you should have (fieldCount)
-              // 2. actually remove this field's controller from the list of controllers
               setState(() {
                 fieldCount--;
                 controllers.remove(controller);

@@ -1,11 +1,12 @@
 import 'package:eventish/components/web_service.dart';
-import 'package:eventish/screens/add_event.dart';
+import 'package:eventish/screens/event_form.dart';
 import 'package:flutter/material.dart';
 import 'package:eventish/models/Event.dart';
 
 class EditEvent extends StatefulWidget {
+  final Function onPush;
   final Event event;
-  EditEvent({this.event});
+  EditEvent({this.event, this.onPush});
   @override
   _EditEventState createState() => _EditEventState();
 }
@@ -18,10 +19,8 @@ class _EditEventState extends State<EditEvent> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Color(0xFF0A0D22),
-        appBar: AppBar(
-          title: Center(child: Text('Eventish')),
-        ),
-        body: AddEvent(
+        body: EventForm(
+          onPush: widget.onPush,
           event: widget.event,
           action: "UPDATE",
           request: req,

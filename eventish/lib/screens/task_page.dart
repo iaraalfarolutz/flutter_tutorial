@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 
 class TaskPage extends StatefulWidget {
   final User user;
-  TaskPage({this.user});
+  final Function onPush;
+  TaskPage({this.user, this.onPush});
   @override
   _TaskPageState createState() => _TaskPageState();
 }

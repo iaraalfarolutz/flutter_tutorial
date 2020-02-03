@@ -64,7 +64,9 @@ class Event {
         guests += this.guests.elementAt(i).username + ",";
       }
     }
-    guests += this.guests.elementAt(this.guests.length - 1).username + "]";
+    if (this.guests.isNotEmpty)
+      guests += this.guests.elementAt(this.guests.length - 1).username;
+    guests += "]";
     return guests;
   }
 

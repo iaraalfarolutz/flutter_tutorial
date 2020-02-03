@@ -24,11 +24,4 @@ class GuestListSingleton {
       return user.username == g;
     });
   }
-
-//  void addAllGuests(List<TextEditingController> controllers) {
-//    guests.clear();
-//    for (int i = 0; i < controllers.length; i++) {
-//      guests.add(controllers.elementAt(i).text);
-//    }
-//  }
 }

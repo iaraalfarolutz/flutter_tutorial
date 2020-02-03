@@ -1,5 +1,5 @@
 import 'package:eventish/constants.dart';
-import 'package:eventish/screens/first_page.dart';
+import 'package:eventish/screens/home_page.dart';
 import 'package:eventish/screens/register_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
