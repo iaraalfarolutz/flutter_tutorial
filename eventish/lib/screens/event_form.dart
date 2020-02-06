@@ -1,6 +1,7 @@
 import 'package:eventish/components/TabNavigator.dart';
 import 'package:eventish/components/guest_list_singleton.dart';
 import 'package:eventish/components/guest_list_form.dart';
+import 'package:eventish/components/web_service.dart';
 import 'package:eventish/models/Event.dart';
 import 'package:eventish/constants.dart';
 import 'package:eventish/models/User.dart';
@@ -35,6 +36,7 @@ class _EventFormState extends State<EventForm> {
 
   @override
   void initState() {
+    super.initState();
     if (widget.event != null) {
       mydate = DateTime.parse(widget.event.date);
       event = widget.event;
@@ -44,7 +46,6 @@ class _EventFormState extends State<EventForm> {
       event.complete = false;
       event.status = "waiting for guests to confirm";
     }
-    super.initState();
   }
 
   @override
@@ -55,9 +56,13 @@ class _EventFormState extends State<EventForm> {
       children: <Widget>[
         Flexible(
           child: ListView(
+            padding: EdgeInsets.only(top: 10.0),
             children: <Widget>[
               TextFormField(
                 decoration: InputDecoration(
+                  labelStyle: TextStyle(color: kButtonColor),
+                  focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: kButtonColor)),
                   border: OutlineInputBorder(),
                   labelText: 'Event name',
                 ),
@@ -125,6 +130,7 @@ class _EventFormState extends State<EventForm> {
                 thickness: 2.0,
               ),
               GuestList(
+                onPush: widget.onPush,
                 initialCount: (event.guests == null || event.guests.isEmpty)
                     ? 1
                     : event.guests.length,
@@ -141,13 +147,31 @@ class _EventFormState extends State<EventForm> {
             event.date = mydate == null ? event.date : mydate.toString();
             if (widget.action == "UPDATE") {
               myEvent = widget.request(event, location, guestsList);
+              myEvent.then((_) {
+                reset();
+              });
             } else {
               event.guests = guestsList;
               myEvent = widget.request(this.event, this.location);
+              myEvent.then((event) {
+                for (int i = 0; i < singleton.tasks.length; i++) {
+                  singleton.tasks.elementAt(i).eventId = event.id;
+                  WebService.postTask(singleton.tasks.elementAt(i));
+                }
+                reset();
+              });
             }
           },
         ),
       ],
     );
+  }
+
+  void reset() {
+    setState(() {
+      event = Event.createFromOrganizer(widget.user.username);
+      event.complete = false;
+      event.status = "waiting for guests to confirm";
+    });
   }
 }

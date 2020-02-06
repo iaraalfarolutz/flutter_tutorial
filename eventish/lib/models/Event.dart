@@ -8,7 +8,7 @@ class Event {
   String date;
   String status;
   bool complete;
-  String name;
+  String name = "";
   Event(
       {this.id,
       this.organizer,
@@ -29,6 +29,8 @@ class Event {
       for (int i = 0; i < this.guests.length - 1; i++) {
         guests += this.guests.elementAt(i).getUserInfo() + ",";
       }
+    }
+    if (this.guests.isNotEmpty) {
       guests += this.guests.elementAt(this.guests.length - 1).getUserInfo();
     }
     guests += "]";

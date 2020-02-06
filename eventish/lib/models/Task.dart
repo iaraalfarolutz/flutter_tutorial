@@ -1,12 +1,10 @@
-import 'package:uuid/uuid.dart';
-
 class Task {
-  final String title;
-  final Uuid id;
-  final Uuid eventId;
-  final String user;
-  final bool confirmed;
-  final String description;
+  String title = "";
+  String id;
+  String eventId;
+  String user;
+  bool confirmed;
+  String description = "";
 
   Task(
       {this.id,
@@ -28,6 +26,7 @@ class Task {
   }
 
   String getTaskInfo() {
+    String shortdesc = this.description.trim().replaceAll("\n", " ");
     String info = "{ \"title\": \"" +
         this.title.trim() +
         "\", " +
@@ -38,11 +37,11 @@ class Task {
         this.user.trim() +
         "\", " +
         "\"description\": \"" +
-        this.description.trim() +
+        shortdesc +
         "\", " +
-        "\"confirmed\": \"" +
+        "\"confirmed\": " +
         this.confirmed.toString() +
-        "\"}";
+        "}";
     return info;
   }
 }

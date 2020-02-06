@@ -126,6 +126,25 @@ class WebService {
     }
   }
 
+  static Future<List<Task>> getTasksByUser(String username) async {
+    final response = await http.get(baseUrl + '/tasks/users/$username');
+    if (response.statusCode == 200) {
+      List<Task> tasks;
+      tasks = (json.decode(response.body) as List)
+          .map((i) => Task.fromJson(i))
+          .toList();
+      return tasks;
+    } else {
+      Fluttertoast.showToast(
+          msg: "The username $username is not correct",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          fontSize: 16.0);
+      throw Exception('Failed to load');
+    }
+  }
+
   static Future<Task> deleteTask(String taskId) async {
     String url = baseUrl + '/tasks/$taskId';
     final response = await http.delete(url);
@@ -328,12 +347,6 @@ class WebService {
     if (response.statusCode == 200) {
       return Location.fromJson(json.decode(response.body));
     } else {
-      Fluttertoast.showToast(
-          msg: "The event provided doesnt have a location yet",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIos: 1,
-          fontSize: 16.0);
       throw Exception('Failed to load');
     }
   }

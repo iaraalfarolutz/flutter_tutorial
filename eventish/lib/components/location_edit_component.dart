@@ -25,7 +25,8 @@ class _LocationEditState extends State<LocationEdit> {
             labelText: 'Event name',
           ),
           cursorColor: kButtonColor,
-          initialValue: widget.location != null ? widget.location.name : "",
+          initialValue:
+              widget.location.longitud != null ? widget.location.name : "",
           onChanged: (text) {
             setState(() {
               widget.location.name = text;
@@ -45,7 +46,7 @@ class _LocationEditState extends State<LocationEdit> {
                   labelText: 'Latitud',
                 ),
                 cursorColor: kButtonColor,
-                initialValue: widget.location != null
+                initialValue: widget.location.latitud != null
                     ? widget.location.latitud.toString()
                     : "2.3",
                 keyboardType: TextInputType.numberWithOptions(
@@ -70,7 +71,7 @@ class _LocationEditState extends State<LocationEdit> {
                   labelText: 'Longitud',
                 ),
                 cursorColor: kButtonColor,
-                initialValue: widget.location != null
+                initialValue: widget.location.longitud != null
                     ? widget.location.longitud.toString()
                     : "5.4",
                 keyboardType: TextInputType.numberWithOptions(

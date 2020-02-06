@@ -78,6 +78,9 @@ class _RegisterPageState extends State<RegisterPage> {
                           return null;
                         },
                         decoration: InputDecoration(
+                          labelStyle: TextStyle(color: kButtonColor),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: kButtonColor)),
                           border: OutlineInputBorder(),
                           labelText: entries[index],
                         ),

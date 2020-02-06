@@ -1,8 +1,10 @@
 import 'package:eventish/components/web_service.dart';
+import 'package:eventish/models/Task.dart';
 import 'package:eventish/models/User.dart';
 
 class GuestListSingleton {
   List<User> guests = new List<User>();
+  List<Task> tasks = new List<Task>();
   static final GuestListSingleton _singleton = GuestListSingleton._internal();
 
   factory GuestListSingleton() {
@@ -17,6 +19,10 @@ class GuestListSingleton {
         guests.add(result);
       }
     });
+  }
+
+  void addTask(Task t) {
+    tasks.add(t);
   }
 
   void removeGuest(String g) {

@@ -25,6 +25,7 @@ class _ShowEventState extends State<ShowEvent> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      backgroundColor: kCardColor,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.end,

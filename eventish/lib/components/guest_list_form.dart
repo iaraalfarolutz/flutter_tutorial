@@ -1,15 +1,19 @@
+import 'package:eventish/components/web_service.dart';
+import 'package:eventish/models/Task.dart';
 import 'package:eventish/models/User.dart';
 import 'package:flutter/material.dart';
 import '../constants.dart';
+import 'TabNavigator.dart';
 import 'guest_list_singleton.dart';
 
 // needs to be StatefulWidget, so we can keep track of the count of the fields internally
 class GuestList extends StatefulWidget {
-  const GuestList({this.initialCount, this.users});
+  const GuestList({this.initialCount, this.users, this.onPush});
 
   // also allow for a dynamic number of starting players
   final int initialCount;
   final List<User> users;
+  final Function onPush;
 
   @override
   _GuestListState createState() => _GuestListState();
@@ -38,29 +42,65 @@ class _GuestListState extends State<GuestList> {
     return controllers.map<Widget>((TextEditingController controller) {
       int displayNumber = i + 1;
       i++;
-      return TextField(
-        controller: controller,
-        maxLength: 20,
-        onSubmitted: (text) {
-          setState(() {
-            singleton.addGuest(text);
-          });
-        },
-        decoration: InputDecoration(
-          labelText: "Guest $displayNumber",
-          counterText: "",
-          prefixIcon: const Icon(Icons.person),
-          suffixIcon: IconButton(
-            icon: Icon(Icons.clear),
-            onPressed: () {
-              setState(() {
-                fieldCount--;
-                controllers.remove(controller);
-                singleton.removeGuest(controller.text);
-              });
-            },
+      return Row(
+        children: <Widget>[
+          Expanded(
+            child: IconButton(
+              icon: Icon(Icons.playlist_add),
+              onPressed: () {
+                User newUser;
+                WebService.fetchUser(controller.text).then((val) {
+                  newUser = val;
+                  Task task;
+                  widget
+                      .onPush(
+                          nextPage: TabNavigatorRoutes.addTask,
+                          newUser: newUser)
+                      .then((val) {
+                    task = val;
+                    singleton.addTask(task);
+                  });
+                });
+              },
+            ),
           ),
-        ),
+          Expanded(
+            flex: 5,
+            child: TextField(
+              controller: controller,
+              maxLength: 20,
+              onSubmitted: (text) {
+                setState(() {
+                  singleton.addGuest(text);
+                });
+              },
+              decoration: InputDecoration(
+                labelStyle: TextStyle(color: kButtonColor),
+                focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: kButtonColor)),
+                labelText: "Guest $displayNumber",
+                counterText: "",
+                prefixIcon: const Icon(
+                  Icons.person,
+                  color: kButtonColor,
+                ),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    Icons.clear,
+                    color: kButtonColor,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      fieldCount--;
+                      controllers.remove(controller);
+                      singleton.removeGuest(controller.text);
+                    });
+                  },
+                ),
+              ),
+            ),
+          ),
+        ],
       );
     }).toList(); // convert to a list
   }

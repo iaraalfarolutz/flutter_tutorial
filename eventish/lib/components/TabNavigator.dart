@@ -1,17 +1,22 @@
 import 'package:eventish/components/Tab.dart';
 import 'package:eventish/models/Event.dart';
+import 'package:eventish/models/Task.dart';
 import 'package:eventish/models/User.dart';
+import 'package:eventish/screens/add_task.dart';
 import 'package:eventish/screens/edit_event.dart';
 import 'package:eventish/screens/location_page.dart';
 import 'package:eventish/screens/show_event.dart';
+import 'package:eventish/screens/show_task.dart';
 import 'package:flutter/material.dart';
 import 'bottom_navigation_bar.dart';
 
 class TabNavigatorRoutes {
   static const String root = '/';
-  static const String showEvent = 'show/event';
+  static const String showEvent = '/show/event';
   static const String editEvent = '/edit/event';
   static const String location = '/location';
+  static const String addTask = '/add/tasks';
+  static const String showTask = '/show/task';
 }
 
 class TabNavigator extends StatelessWidget {
@@ -29,9 +34,10 @@ class TabNavigator extends StatelessWidget {
   final GlobalKey<NavigatorState> navigatorKey;
   final TabItem tabItem;
 
-  Future _push(BuildContext context, {String nextPage, Event event}) {
-    var routeBuilders =
-        _routeBuilders(context, nextPage: nextPage, event: event);
+  Future _push(BuildContext context,
+      {String nextPage, Event event, User user, Task task}) {
+    var routeBuilders = _routeBuilders(context,
+        nextPage: nextPage, event: event, newUser: user, task: task);
     return Navigator.push(
         context,
         MaterialPageRoute(
@@ -39,16 +45,16 @@ class TabNavigator extends StatelessWidget {
   }
 
   Map<String, WidgetBuilder> _routeBuilders(BuildContext context,
-      {String nextPage, Event event}) {
+      {String nextPage, Event event, User newUser, Task task}) {
     return {
       TabNavigatorRoutes.root: (context) => MyTab(
             action: action,
-            user: user,
+            user: this.user,
             event: event,
             req: req,
             item: tabItem,
-            onPush: ({nextPage, event}) =>
-                _push(context, nextPage: nextPage, event: event),
+            onPush: ({nextPage, event, newUser, task}) => _push(context,
+                nextPage: nextPage, event: event, user: newUser, task: task),
           ),
       TabNavigatorRoutes.editEvent: (context) => EditEvent(
             event: event,
@@ -64,6 +70,16 @@ class TabNavigator extends StatelessWidget {
             event: event,
             onPush: ({nextPage, event}) =>
                 _push(context, nextPage: nextPage, event: event),
+          ),
+      TabNavigatorRoutes.addTask: (context) => AddTask(
+            user: newUser,
+            onPush: ({nextPage, newUser}) =>
+                _push(context, nextPage: nextPage, user: newUser),
+          ),
+      TabNavigatorRoutes.showTask: (context) => ShowTask(
+            task: task,
+            onPush: ({nextPage, newUser}) =>
+                _push(context, nextPage: nextPage, task: task),
           ),
     };
   }
