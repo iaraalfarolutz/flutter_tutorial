@@ -43,8 +43,10 @@ class _TaskPageState extends State<TaskPage> {
                           child: Padding(
                             padding: EdgeInsets.all(10.0),
                             child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 Expanded(
+                                  flex: 2,
                                   child: Container(
                                       child: Text(
                                           snapshot.data
@@ -58,25 +60,12 @@ class _TaskPageState extends State<TaskPage> {
                                 Expanded(
                                   child: Container(
                                       color: kCardColor,
-                                      child: Text(snapshot.data
-                                          .elementAt(index)
-                                          .confirmed
-                                          .toString())),
-                                ),
-                                Expanded(
-                                  child: RaisedButton(
-                                    color: kBackColor,
-                                    child: Text("EDIT"),
-                                    onPressed: () {
-//                                      setState(() {
-//                                        widget.onPush(
-//                                            event:
-//                                                snapshot.data.elementAt(index),
-//                                            nextPage:
-//                                                TabNavigatorRoutes.editEvent);
-//                                      });
-                                    },
-                                  ),
+                                      child: Text(
+                                        snapshot.data.elementAt(index).confirmed
+                                            ? "Confirmed"
+                                            : "Waiting for confirmation",
+                                        style: TextStyle(fontSize: 18.0),
+                                      )),
                                 ),
                               ],
                             ),

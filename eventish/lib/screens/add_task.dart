@@ -6,12 +6,13 @@ import 'package:eventish/constants.dart';
 class AddTask extends StatelessWidget {
   final User user;
   final Function onPush;
+  final String action;
   final TextEditingController _multiLineTextFieldController =
       TextEditingController();
-  AddTask({this.onPush, this.user});
+  final TextEditingController _titleController = TextEditingController();
+  AddTask({this.onPush, this.user, this.action});
   @override
   Widget build(BuildContext context) {
-    String title;
     return Form(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -32,9 +33,7 @@ class AddTask extends StatelessWidget {
                       hoverColor: kButtonColor,
                       labelText: 'Title',
                     ),
-                    onFieldSubmitted: (text) {
-                      title = text;
-                    },
+                    controller: _titleController,
                     cursorColor: kButtonColor,
                   ),
                 ),
@@ -54,12 +53,6 @@ class AddTask extends StatelessWidget {
                       hoverColor: kButtonColor,
                       labelText: 'Description',
                     ),
-                    onFieldSubmitted: (text) {
-                      print("submitted");
-                    },
-                    onEditingComplete: () {
-                      print("onedit");
-                    },
                     cursorColor: kButtonColor,
                   ),
                 ),
@@ -68,13 +61,13 @@ class AddTask extends StatelessWidget {
           ),
           RaisedButton(
             color: kButtonColor,
-            child: Text("SAVE"),
+            child: Text(action.toUpperCase()),
             onPressed: () {
               Task task = new Task(
                   user: user.username,
                   confirmed: false,
                   description: _multiLineTextFieldController.text,
-                  title: title);
+                  title: _titleController.text);
               Navigator.of(context).pop(task);
             },
           ),

@@ -163,6 +163,16 @@ class WebService {
 
   //Event
 
+  static Future<Event> fetchEvent(String eventId) async {
+    String url = baseUrl + '/events/$eventId';
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      return Event.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Wrong id');
+    }
+  }
+
   static Future<Event> deleteEvent(String eventId) async {
     String url = baseUrl + '/events/$eventId';
     final response = await http.delete(url);

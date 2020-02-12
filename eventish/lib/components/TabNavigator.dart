@@ -35,9 +35,13 @@ class TabNavigator extends StatelessWidget {
   final TabItem tabItem;
 
   Future _push(BuildContext context,
-      {String nextPage, Event event, User user, Task task}) {
+      {String nextPage, Event event, User user, Task task, String newAction}) {
     var routeBuilders = _routeBuilders(context,
-        nextPage: nextPage, event: event, newUser: user, task: task);
+        nextPage: nextPage,
+        event: event,
+        newUser: user,
+        task: task,
+        newAction: newAction);
     return Navigator.push(
         context,
         MaterialPageRoute(
@@ -45,7 +49,11 @@ class TabNavigator extends StatelessWidget {
   }
 
   Map<String, WidgetBuilder> _routeBuilders(BuildContext context,
-      {String nextPage, Event event, User newUser, Task task}) {
+      {String nextPage,
+      Event event,
+      User newUser,
+      Task task,
+      String newAction}) {
     return {
       TabNavigatorRoutes.root: (context) => MyTab(
             action: action,
@@ -58,8 +66,12 @@ class TabNavigator extends StatelessWidget {
           ),
       TabNavigatorRoutes.editEvent: (context) => EditEvent(
             event: event,
-            onPush: ({nextPage, event}) =>
-                _push(context, nextPage: nextPage, event: event),
+            user: this.user,
+            onPush: ({nextPage, event, newUser}) => _push(context,
+                nextPage: nextPage,
+                event: event,
+                user: newUser,
+                newAction: "ADD"),
           ),
       TabNavigatorRoutes.location: (context) => LocationPage(
             event: event,
@@ -73,13 +85,17 @@ class TabNavigator extends StatelessWidget {
           ),
       TabNavigatorRoutes.addTask: (context) => AddTask(
             user: newUser,
+            action: newAction,
             onPush: ({nextPage, newUser}) =>
                 _push(context, nextPage: nextPage, user: newUser),
           ),
       TabNavigatorRoutes.showTask: (context) => ShowTask(
             task: task,
-            onPush: ({nextPage, newUser}) =>
-                _push(context, nextPage: nextPage, task: task),
+            onPush: ({nextPage, newUser}) => _push(context,
+                nextPage: nextPage,
+                task: task,
+                newAction: "UPDATE",
+                user: newUser),
           ),
     };
   }

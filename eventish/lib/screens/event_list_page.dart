@@ -79,6 +79,7 @@ class _EventListPageState extends State<EventListPage> {
                                         widget.onPush(
                                             event:
                                                 snapshot.data.elementAt(index),
+                                            newUser: widget.user,
                                             nextPage:
                                                 TabNavigatorRoutes.editEvent);
                                       });

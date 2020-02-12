@@ -147,7 +147,11 @@ class _EventFormState extends State<EventForm> {
             event.date = mydate == null ? event.date : mydate.toString();
             if (widget.action == "UPDATE") {
               myEvent = widget.request(event, location, guestsList);
-              myEvent.then((_) {
+              myEvent.then((event) {
+                for (int i = 0; i < singleton.tasks.length; i++) {
+                  singleton.tasks.elementAt(i).eventId = event.id;
+                  WebService.postTask(singleton.tasks.elementAt(i));
+                }
                 reset();
               });
             } else {

@@ -31,7 +31,9 @@ class _GuestListState extends State<GuestList> {
     int i;
     if (controllers.length < fieldCount) {
       for (i = controllers.length; i < fieldCount; i++) {
-        if (widget.users != null && widget.users.isNotEmpty)
+        if (widget.users != null &&
+            widget.users.isNotEmpty &&
+            i <= widget.users.length)
           controllers.add(
               TextEditingController(text: widget.users.elementAt(i).username));
         else
