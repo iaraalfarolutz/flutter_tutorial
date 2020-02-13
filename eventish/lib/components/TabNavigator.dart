@@ -84,6 +84,7 @@ class TabNavigator extends StatelessWidget {
                 _push(context, nextPage: nextPage, event: event),
           ),
       TabNavigatorRoutes.addTask: (context) => AddTask(
+            task: task,
             user: newUser,
             action: newAction,
             onPush: ({nextPage, newUser}) =>
@@ -91,9 +92,9 @@ class TabNavigator extends StatelessWidget {
           ),
       TabNavigatorRoutes.showTask: (context) => ShowTask(
             task: task,
-            onPush: ({nextPage, newUser}) => _push(context,
+            onPush: ({nextPage, newUser, newTask}) => _push(context,
                 nextPage: nextPage,
-                task: task,
+                task: newTask,
                 newAction: "UPDATE",
                 user: newUser),
           ),
