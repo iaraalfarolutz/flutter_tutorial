@@ -1,5 +1,4 @@
 import 'package:eventish/components/TabNavigator.dart';
-import 'package:eventish/components/bottom_navigation_bar.dart';
 import 'package:eventish/components/web_service.dart';
 import 'package:eventish/constants.dart';
 import 'package:eventish/models/Event.dart';
@@ -46,9 +45,6 @@ class _ShowTaskState extends State<ShowTask> {
                         margin: EdgeInsets.all(15.0),
                         color: kCardColor,
                         child: ListView(
-//                        mainAxisAlignment: MainAxisAlignment.start,
-//                        crossAxisAlignment: CrossAxisAlignment.center,
-//                        mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             Center(
                               child: Padding(
@@ -108,6 +104,7 @@ class _ShowTaskState extends State<ShowTask> {
                           .onPush(
                               nextPage: TabNavigatorRoutes.addTask,
                               newTask: widget.task,
+                              event: event,
                               newUser: user)
                           .then((val) {
                         widget.task.title = val.title;

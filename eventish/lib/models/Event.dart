@@ -59,6 +59,17 @@ class Event {
     return info;
   }
 
+  List<String> getGuestsUsernames() {
+    List<String> usernames = new List<String>();
+    if (this.guests != null) {
+      for (int i = 0; i < this.guests.length; i++) {
+        usernames.add(this.guests.elementAt(i).username);
+      }
+    }
+    usernames.add(this.organizer);
+    return usernames;
+  }
+
   String getGuests() {
     String guests = "[";
     if (this.guests != null && this.guests.length > 1) {

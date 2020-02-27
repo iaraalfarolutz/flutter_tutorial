@@ -81,7 +81,7 @@ class WebService {
     final response = await http.put(url, headers: headers, body: body);
     if (response.statusCode == 200) {
       Fluttertoast.showToast(
-          msg: "User updated!",
+          msg: "Task updated!",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIos: 1,

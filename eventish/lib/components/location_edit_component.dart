@@ -15,6 +15,13 @@ class LocationEdit extends StatefulWidget {
 
 class _LocationEditState extends State<LocationEdit> {
   @override
+  void initState() {
+    super.initState();
+    widget.location.longitud = 0;
+    widget.location.latitud = 0;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ListView(
       padding: EdgeInsets.all(15.0),
@@ -48,7 +55,7 @@ class _LocationEditState extends State<LocationEdit> {
                 cursorColor: kButtonColor,
                 initialValue: widget.location.latitud != null
                     ? widget.location.latitud.toString()
-                    : "2.3",
+                    : "0",
                 keyboardType: TextInputType.numberWithOptions(
                     signed: true, decimal: true),
                 inputFormatters: [
@@ -73,7 +80,7 @@ class _LocationEditState extends State<LocationEdit> {
                 cursorColor: kButtonColor,
                 initialValue: widget.location.longitud != null
                     ? widget.location.longitud.toString()
-                    : "5.4",
+                    : "0",
                 keyboardType: TextInputType.numberWithOptions(
                     signed: true, decimal: true),
                 inputFormatters: [

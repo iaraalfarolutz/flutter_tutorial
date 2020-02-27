@@ -1,3 +1,4 @@
+import 'package:eventish/components/TabNavigator.dart';
 import 'package:flutter/material.dart';
 import 'package:eventish/constants.dart';
 import 'package:eventish/models/Event.dart';
@@ -106,6 +107,21 @@ class _ShowEventState extends State<ShowEvent> {
                           itemCount: widget.event.guests.length)),
                   RaisedButton(
                     color: kButtonColor,
+                    child: Text('TASKS'),
+                    onPressed: () {
+                      setState(() {
+                        widget.onPush(
+                          nextPage: TabNavigatorRoutes.tasks,
+                          event: widget.event,
+                        );
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    height: 15.0,
+                  ),
+                  RaisedButton(
+                    color: kButtonDisabledColor,
                     child: Text('DELETE'),
                     onPressed: () {
                       setState(() {

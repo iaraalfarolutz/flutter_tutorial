@@ -158,11 +158,13 @@ class _EventFormState extends State<EventForm> {
               event.guests = guestsList;
               myEvent = widget.request(this.event, this.location);
               myEvent.then((event) {
-                for (int i = 0; i < singleton.tasks.length; i++) {
-                  singleton.tasks.elementAt(i).eventId = event.id;
-                  WebService.postTask(singleton.tasks.elementAt(i));
+                if (singleton.tasks != null) {
+                  for (int i = 0; i < singleton.tasks.length; i++) {
+                    singleton.tasks.elementAt(i).eventId = event.id;
+                    WebService.postTask(singleton.tasks.elementAt(i));
+                  }
+                  reset();
                 }
-                reset();
               });
             }
           },

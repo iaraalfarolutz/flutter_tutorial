@@ -7,6 +7,7 @@ import 'package:eventish/screens/edit_event.dart';
 import 'package:eventish/screens/location_page.dart';
 import 'package:eventish/screens/show_event.dart';
 import 'package:eventish/screens/show_task.dart';
+import 'package:eventish/screens/task_page.dart';
 import 'package:flutter/material.dart';
 import 'bottom_navigation_bar.dart';
 
@@ -17,6 +18,7 @@ class TabNavigatorRoutes {
   static const String location = '/location';
   static const String addTask = '/add/tasks';
   static const String showTask = '/show/task';
+  static const String tasks = '/tasks';
 }
 
 class TabNavigator extends StatelessWidget {
@@ -86,17 +88,25 @@ class TabNavigator extends StatelessWidget {
       TabNavigatorRoutes.addTask: (context) => AddTask(
             task: task,
             user: newUser,
+            event: event,
             action: newAction,
-            onPush: ({nextPage, newUser}) =>
-                _push(context, nextPage: nextPage, user: newUser),
+            onPush: ({nextPage, newUser, event}) =>
+                _push(context, nextPage: nextPage, user: newUser, event: event),
           ),
       TabNavigatorRoutes.showTask: (context) => ShowTask(
             task: task,
-            onPush: ({nextPage, newUser, newTask}) => _push(context,
+            onPush: ({nextPage, newUser, newTask, event}) => _push(context,
                 nextPage: nextPage,
                 task: newTask,
                 newAction: "UPDATE",
+                event: event,
                 user: newUser),
+          ),
+      TabNavigatorRoutes.tasks: (context) => TaskPage(
+            user: user,
+            event: event,
+            onPush: ({nextPage, newUser, task, event}) => _push(context,
+                nextPage: nextPage, task: task, user: newUser, event: event),
           ),
     };
   }
