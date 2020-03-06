@@ -14,4 +14,12 @@ class User {
         id: firebaseUser.uid,
         photoUrl: firebaseUser.photoUrl);
   }
+
+  factory User.fromMap(Map snapshot) {
+    return User(
+        id: snapshot['id'] ?? '',
+        nickname: snapshot['nickname'] ?? '',
+        photoUrl: snapshot['photoUrl'] ?? '',
+        aboutMe: snapshot['aboutMe'] ?? '');
+  }
 }
