@@ -1,52 +1,88 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:messageapp/components/my_app_bar.dart';
 import 'package:messageapp/main/mainBloc.dart';
 import 'package:messageapp/main/mainProvider.dart';
 import 'package:messageapp/models/user.dart';
 
 import '../constants.dart';
 
-class MainView extends StatelessWidget {
+class MainView extends StatefulWidget {
   final User user;
   MainView({this.user});
+  @override
+  _MainViewState createState() => _MainViewState();
+}
 
+class _MainViewState extends State<MainView> {
   @override
   Widget build(BuildContext context) {
     final MainBloc bloc = MainProvider.of(context);
     bloc.addUsers();
-    return Scaffold(
-      backgroundColor: kBackgroundColor,
-      appBar: AppBar(
-        backgroundColor: kMainColor,
-        title: Center(child: Text('Message App')),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          StreamBuilder(
-            stream: bloc.getStream,
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return Center(
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(kMainColor),
-                  ),
-                );
-              } else {
-                return Flexible(
-                  child: ListView.builder(
-                    padding: EdgeInsets.all(10.0),
-                    itemBuilder: (context, index) =>
-                        buildItem(context, snapshot.data.elementAt(index)),
-                    itemCount: snapshot.data.length,
-                  ),
-                );
-              }
-            },
-          )
-        ],
+    return new WillPopScope(
+      onWillPop: onBackPressed,
+      child: Scaffold(
+        backgroundColor: kBackgroundColor,
+        appBar: MyAppBar(user: widget.user),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            StreamBuilder(
+              stream: bloc.getStream,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(kMainColor),
+                    ),
+                  );
+                } else {
+                  return Flexible(
+                    child: ListView.builder(
+                      padding: EdgeInsets.all(10.0),
+                      itemBuilder: (context, index) =>
+                          buildItem(context, snapshot.data.elementAt(index)),
+                      itemCount: snapshot.data.length,
+                    ),
+                  );
+                }
+              },
+            )
+          ],
+        ),
       ),
     );
+  }
+
+  Future<bool> onBackPressed() async {
+    showDialog<bool>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Are you sure you want to exit the app'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Yes, Im sure'),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
+            FlatButton(
+              child: Text('No'),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+          ],
+        );
+      },
+    ).then((value) {
+      if (value) exit(0);
+      return value;
+    });
   }
 }
 
@@ -56,7 +92,7 @@ buildItem(BuildContext context, User user) {
       child: Row(
         children: <Widget>[
           Material(
-            child: user.photoUrl != null
+            child: user.photoUrl != null && user.photoUrl != ""
                 ? CachedNetworkImage(
                     placeholder: (context, url) => Container(
                       child: CircularProgressIndicator(

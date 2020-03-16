@@ -1,6 +1,11 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:messageapp/models/user.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import '../main.dart';
 
 class MainBloc {
   StreamController<List<User>> controller =
@@ -17,6 +22,18 @@ class MainBloc {
       }
       controller.sink.add(users);
     });
+  }
+
+  Future<Null> handleSignOut(BuildContext context) async {
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+    //not sure i should handle this here
+    await FirebaseAuth.instance.signOut();
+    await googleSignIn.disconnect();
+    await googleSignIn.signOut();
+
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => MyApp()),
+        (Route<dynamic> route) => false);
   }
 
   dispose() {
